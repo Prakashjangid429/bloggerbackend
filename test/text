@@ -1,0 +1,47 @@
+const Blog = require('../models/Blog');
+const Review = require('../models/Review');
+
+const addReview = async (req, res) => {
+    try {
+        const { reviewer_name, rating, comment, blogId } = req.body;
+
+        // Create a new review
+        const review = new Review({
+            reviewer_name,
+            rating,
+            comment,
+            blog: blogId  // Associate the review with the blog
+        });
+
+        // Save the review
+        await review.save();
+
+        // Update the blog's rating and total_reviews
+        const blog = await Blog.findById(blogId);
+
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found" });
+        }
+
+        // Get all reviews of this blog to calculate the average rating
+        const reviews = await Review.find({ blog: blogId });
+
+        // Calculate the new average rating
+        const totalReviews = reviews.length;
+        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+        const averageRating = totalRating / totalReviews;
+
+        // Update the blog with the new rating and total reviews
+        blog.rating.average = averageRating;
+        blog.rating.total_reviews = totalReviews;
+        await blog.save();
+
+        return res.status(200).json({
+            message: "Review added and blog rating updated",
+            blog,
+            review
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error adding review", error });
+    }
+};
