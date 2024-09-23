@@ -58,6 +58,7 @@ const deleteUnusedImages = async (req, res) => {
                     }
                 });
             });
+            console.log(usedImageFilenames)
             res.status(200).json({unusedImages });
         });
     } catch (err) {

@@ -7,6 +7,8 @@ const blogRoutes = require('./routes/blog.routes');
 const categoryRoutes = require('./routes/category.routes');
 const contactRoutes = require('./routes/contact.routes');
 const cleanupRoutes = require('./routes/cleanup.routes');
+const reviewRoutes = require('./routes/review.routes');
+
 
 
 
@@ -25,6 +27,11 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+app.get('/', (req, res) => {
+    res.send('Hello, Prakash');
+});
+
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', uploadRoutes);
 app.use('/api/auth', authRoutes);
@@ -32,6 +39,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api', contactRoutes);
 app.use('/api', cleanupRoutes);
+app.use('/api', reviewRoutes);
 
 
 

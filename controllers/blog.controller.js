@@ -32,7 +32,7 @@ exports.getBlogs = async (req, res) => {
         const sortBy = req.query.sortBy || 'createdAt';
         const order = req.query.order === 'asc' ? 1 : -1;
         const blogs = await Blog.find(filter)
-            .select(['-content','-description'])
+            .select(['-content', '-description'])
             .populate('author', ['full_name', 'email'])
             .populate('categories', 'name')
             .sort({ [sortBy]: order })
@@ -131,7 +131,7 @@ exports.blogCounter = async (req, res) => {
 
 
 exports.updateBlog = async (req, res) => {
-    const { title,description , blog_url , content } = req.body;
+    const { title, description, blog_url, content } = req.body;
 
     try {
         const blog = await Blog.findById(req.params.id);
